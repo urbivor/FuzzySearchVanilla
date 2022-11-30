@@ -1,6 +1,9 @@
 //Counts
 let searchResultsCount = 0;
 
+//Data
+let productResults = {}
+
 //States
 let noProductMatchesIndicatorState = `hidden`;
 
@@ -8,7 +11,10 @@ let noProductMatchesIndicatorState = `hidden`;
 let searchQueryInput = document.getElementById("searchQueryInput")
 let productSearchNoResultsIndicator = document.getElementById("productSearchNoResultsIndicator")
 let productSearchResultsList = document.getElementById("productSearchResultsList")
-
+let productViewTitle = document.getElementById("productViewTitle")
+let productViewDescription = document.getElementById("productViewDescription")
+let productViewRating = document.getElementById("productViewRating")
+let productView = document.getElementById("productView")
 
 //Listeners
 searchQueryInput.addEventListener('input', (event) => {
@@ -70,7 +76,7 @@ function searchQueryWatcher() {
         fetcher(`productSearch`, searchQuery)
     } else {
         console.log(`Not enough characters to query products`)
-        hideSearchResults(0.08)
+        hideSearchResults(0.05)
         hideNoProductMatchesIndicator()
     }
 
@@ -81,11 +87,16 @@ function searchQueryWatcher() {
 ////Interfaces with an API. Pass it the API name as the first parameter & additional parmaters thereafter
 function fetcher(api, query) {
     console.log(`Got a request to call ${api} api`)
+    //I'll just write one endpoint for this app, Product Search
     if (api == `productSearch`) {
         console.log(`Ready to get data from products search API with query ${query}`)
+        //Using Fetch we can do a very simple request like this & also built much more complex payloads with different content types
         fetch(`https://dummyjson.com/products/search?q=${query}`)
+            //Assuming all goes well, convert the response to a JSON object
             .then((response) => response.json())
+            //Then parse it using the Result Parser function
             .then((data) => resultsParser(data))
+            //Handles errors. Interesting note, the dummyjson.com API went down for a while & this caught it 💪
             .catch((error) => {
                 console.log('Failed to query products:', error);
                 console.error('Couldnt query products, show the error indicator')
@@ -99,18 +110,24 @@ function fetcher(api, query) {
 ////Parses results after a search. Pass it a JSON object
 function resultsParser(results) {
     console.log(`Ready to parse ${results}...`)
+    //The API returns a products subset which is all we need
     results = results.products
+
+    //Count the results
     let resultsCount = results.length;
     console.log(`Got ${resultsCount} results`)
-
+    //More than 0 results?
     if (resultsCount > 0) {
         console.log(`Found matching products, show the resultsList`)
+        //Set the results to the globally available data object productResults{}
+        productResults = results;
+        console.log(`Products globally available as ${productResults}`)
         hideNoProductMatchesIndicator()
         renderProductResults(results);
         setTimeout(() => {
             showSearchResults(0.08)
         }, 355);
-
+        //Handle no matches
     } else {
         console.log(`No matching products, show the no results indicator`)
         showNoProductMatchesIndicator()
@@ -141,9 +158,10 @@ function hideNoProductMatchesIndicator() {
 //BEGIN:  Render Product Results
 ////Renders a list of product results
 function renderProductResults(results) {
+
     productSearchResultsList.innerHTML = ``;
     console.log(`Got ${results.length} products to render`)
-    results.forEach((result) => {
+    results.forEach((result, index) => {
         //Creating a random throwaway 5 character ID to append to this result (Required to draw ratings stars & apply fade in to thumbnails)
         let resultID = Math.random().toString(36).slice(2, 7);
         //Getting the thumbnail image link for the result. The dummyjson.com/products API always sends the thumbnail as the last image
@@ -153,9 +171,10 @@ function renderProductResults(results) {
         let thumbnailImage = new Image(0, 0);
         thumbnailImage.src = thumbnailImageLink;
 
+
         //Insert the result to the DOM
         productSearchResultsList.insertAdjacentHTML('afterbegin', `
-        <div class="result">
+        <div onclick=viewProductResult(this.getAttribute('data-index'),this) data-index=${index} class="result">
             <div class="left">
             <div id="thumbnail${resultID}" class="thumbnail";background-size:cover"></div>
             <div class="name">
@@ -215,9 +234,96 @@ function renderStar(container, stars) {
 }
 //END:Render Star
 
-//BEGIN:View Product
-////Views a product. Pass it the result ID
-function viewProduct(resultID){
 
+
+//BEGIN:View Product Result
+////Views a matching product result.Pass it the index of the result you'd like as it exists in the global productResults object & the DOM result itself
+function viewProductResult(index, thisResult) {
+    console.log(`Ready to get ${index} from productResults...`)
+    console.log(`Got ${productResults[index].title}`)
+    //Indicate which result has been selected
+    gsap.to(thisResult, {
+        background: `#bcace3`,
+        ease: Expo.easeOut,
+        duration: 0.21,
+    })
+    //Slide out & hide the results
+    gsap.to(productSearchResultsList, {
+        x: -34,
+        autoAlpha: 0.13,
+        ease: Expo.easeOut,
+        delay: 0.55
+    })
+
+
+    //Generate the product detail view
+    productViewTitle.innerText = productResults[index].title
+    productViewDescription.innerText = productResults[index].description
+    productViewBrand.innerText = productResults[index].brand
+    //Get any attached image links
+
+    //Make it draggable
+    Draggable.create(productView, {
+        type: "x",
+        bounds: productView,
+        edgeResistance: 0.89,
+        onDragStart: function () {
+            let startPosition = this.x;
+            let direction = this.getDirection()
+            console.log(`${direction},x:${startPosition}`)
+        },
+        onDrag: function () {
+            let deltaX = this.x;
+            deltaX > 8 ? hideProductResult(this) : ""
+
+        },
+        onDragEnd: function () {
+            gsap.to(productView, {
+                x: 0,
+                ease: Elastic.easeOut,
+                duration: 1.34
+            })
+        }
+    })
+
+    //Reveal the product detail view
+    gsap.to(productView, {
+        duration: 0.55,
+        ease: Expo.easeOut,
+        autoAlpha: 1,
+        x: 0,
+        scale: 1,
+        delay: 0.55
+    })
 }
-//END:View Product
+//END:View Product Result
+
+//BEGIN:Hide Product Result
+////Hides the Product Result view. Pass it the Draggable instance
+function hideProductResult(drag) {
+    gsap.to(productView, {
+        x: 34,
+        autoAlpha: 0,
+        ease: Expo.easeOut,
+        duration: 0.55,
+        onComplete: function () {
+            console.log(`Resetting product view`)
+            drag.kill()
+            gsap.set(productView, {
+                x: 34
+            })
+        }
+    })
+    gsap.to(productSearchResultsList, {
+        x: 0,
+        autoAlpha: 1,
+        ease: Expo.easeOut,
+
+    })
+    gsap.to('.result', {
+        background: `#ffffff`,
+        ease: Expo.easeOut,
+        duration: 0.55
+    })
+}
+//END:Hide Product Result

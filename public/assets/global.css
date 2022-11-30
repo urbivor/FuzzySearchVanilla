@@ -29,7 +29,7 @@ h2 {
 }
 
 #app {
-  padding: 21px;
+  padding: 21px 89px 21px 21px;
 }
 
 .fuzzySearch:first-of-type {
@@ -147,6 +147,7 @@ h2 {
   position: absolute;
   margin-top: 13px;
   width: 100%;
+
   /* visibility: hidden; */
 }
 
@@ -263,4 +264,34 @@ h2 {
 
 .fuzzySearch .resultsList .result .rating .star img {
   width: 8px;
+}
+
+.fuzzySearch .productView {
+  position: absolute;
+  margin-top: 13px;
+  width: fit-content;
+  max-width: 384px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  margin-left: 13px;
+  padding: 21px;
+  box-shadow: 0px 3px 13px rgb(0 0 0 / 13%);
+  border-radius: 13px;
+  transform: translate(34px, 0px);
+  z-index: 3;
+  visibility: hidden;
+}
+
+.fuzzySearch .productView .title {
+  font-size: 1.34em;
+  font-family: "title";
+}
+
+.fuzzySearch .productView .brand {
+  font-size: 0.55em;
+}
+
+.fuzzySearch .productView .description {
+  font-size: 1em;
 }
