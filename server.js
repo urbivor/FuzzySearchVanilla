@@ -1,8 +1,8 @@
 //Setup Dependencies
 const express = require('express');
-const cors = require(`cors`)
+// const cors = require(`cors`)
 const app = express();
-const helmet = require('helmet')
+// const helmet = require('helmet')
 
 //Setup App
 const port = process.env.PORT || 3029;
