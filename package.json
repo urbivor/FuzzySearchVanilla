@@ -1,0 +1,15 @@
+{
+  "name": "fuzzysearchvanilla",
+  "version": "1.0.0",
+  "description": "Fuzzy Search Custom Component",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "helmet": "^6.0.0"
+  }
+}

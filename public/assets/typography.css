@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "title";
+  src: url("./typography/aktivgrotesk-black-webfont.woff2") format("woff2"),
+    url("./typography/aktivgrotesk-black-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "bodyRegular";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./typography/heroNewRegular.woff") format("woff");
+}
+@font-face {
+  font-family: "bodyBold";
+  font-style: normal;
+  font-weight: normal;
+  src: url("./typography/heroNewBold.woff") format("woff");
+}

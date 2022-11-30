@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' dummyjson.com; img-src * data:;style-src 'self' 'unsafe-inline';">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuzzy Search</title>
+    <link rel="stylesheet" href="assets/global.css" />
+    <link rel="stylesheet" href="assets/typography.css" />
+    <script src="plugins/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div id="productsSearch" class="fuzzySearch">
+        <div>
+            <h2 class="fuzzySearchStateLabel">
+                <div class="decoration"></div>
+                Start typing to search products
+            </h2>
+        <div class="decoration"></div>
+        <div class="bigInput">
+            <div class="icon">
+                <img src="assets/images/search.svg" alt="Search for products">
+            </div>
+            <input id="searchQueryInput" type="text" placeholder ="Search products..." id="productsSearchInput">
+        </div>
+       
+      </div>
+      <div class="clear">
+        <img src="assets/images/clearSearchIcon.svg" />
+      </div>
+      <div id="productSearchNoResultsIndicator">
+        No products were found that matched your query.
+      </div>
+      <div id="productSearchResultsList" class="resultsList">
+
+     
+
+      </div>
+
+    </div>
+    <script src="assets/ui.js"></script>
+  </body>
+</html>

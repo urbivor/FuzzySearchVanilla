@@ -1,0 +1,266 @@
+html {
+  height: 100%;
+  background: url("../assets/images/heroPattern.svg");
+  background-size: 50%;
+  padding-bottom: 55px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: "bodyRegular";
+}
+
+input {
+  font-family: "bodyRegular";
+  outline: none;
+  border: none;
+}
+
+input:focus {
+  outline: none;
+  border: none;
+}
+
+h2 {
+  margin: 0px;
+  font-family: "title";
+}
+
+#app {
+  padding: 21px;
+}
+
+.fuzzySearch:first-of-type {
+  margin-top: 0px;
+}
+
+.fuzzySearch {
+  width: 100%;
+  max-width: 384px;
+  position: relative;
+  margin-top: 34px;
+}
+
+.fuzzySearch h2 {
+  color: #32274d;
+  padding: 0px 0px 13px 0px;
+}
+
+.fuzzySearchStateLabel {
+  position: relative;
+  bottom: 2px;
+  left: 5px;
+}
+
+.fuzzySearchStateLabel .decoration {
+  position: absolute;
+  width: 64px;
+  height: 5px;
+  background: #6366f1;
+  top: 30px;
+  border-radius: 5px;
+}
+
+.fuzzySearch .icon {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  z-index: 1;
+}
+
+#productSearchNoResultsIndicator {
+  position: absolute;
+  background: white;
+  margin-top: 13px;
+  box-shadow: 0px 1px 8px rgb(0 0 0 / 21%);
+  visibility: hidden;
+  left: 21px;
+  width: fit-content;
+  font-size: 0.84em;
+  padding: 13px;
+  border-radius: 13px;
+}
+
+.fuzzySearch .icon img {
+  width: 20px;
+}
+
+.fuzzySearch input {
+  box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.21);
+  border: 0px;
+  border-radius: 21px;
+  padding: 10px 13px 10px 34px;
+  width: 100%;
+  font-size: 0.89em;
+  transition: 0.21s all cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.fuzzySearch input:focus {
+  outline: none;
+  box-shadow: 0px 0px 13px rgba(99, 102, 241, 0.89);
+}
+
+.fuzzySearch .bigInput {
+  position: relative;
+  left: 8px;
+  top: 3px;
+}
+
+.fuzzySearch .clear {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 12px;
+  bottom: 10px;
+  border-radius: 13px;
+  width: 21px;
+  height: 21px;
+  background: white;
+  z-index: 2;
+  cursor: pointer;
+  transform: scale(0.89);
+  visibility: hidden;
+}
+
+.fuzzySearch .microloader {
+  position: absolute;
+  right: 15px;
+  bottom: 13px;
+  visibility: hidden;
+}
+
+.fuzzySearch .microloader div {
+  width: 16px;
+  height: 16px;
+  border-left: solid 1px #6366f0;
+  border-top: solid 1px #6366f0;
+  border-right: solid 1px #6366f0;
+  border-radius: 13px;
+}
+
+.fuzzySearch .resultsList {
+  margin-left: 13px;
+  padding-bottom: 55px;
+  position: absolute;
+  margin-top: 13px;
+  width: 100%;
+  /* visibility: hidden; */
+}
+
+.fuzzySearch .resultsList .result:first-child {
+  margin: 0px 0px 0px 0px;
+}
+
+.fuzzySearch .resultsList .label {
+  border-radius: 13px;
+  background: white;
+  box-shadow: 0px 1px 13px rgb(0 0 0 / 21%);
+  padding: 8px;
+  margin: 8px 0px 0px 0px;
+  position: absolute;
+}
+
+.fuzzySearch .resultsList .result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 13px;
+  background: white;
+  box-shadow: 0px 1px 13px rgb(0 0 0 / 21%);
+  padding: 13px;
+  margin: 8px 0px 0px 0px;
+  transition: 0.13s ease-in-out all;
+}
+
+.fuzzySearch .resultsList .result:hover {
+  transform: scale(1.01);
+}
+
+.fuzzySearch .resultsList .result .left,
+.fuzzySearch .resultsList .result .right {
+  display: flex;
+}
+
+.fuzzySearch .resultsList .result .left {
+}
+
+.fuzzySearch .resultsList .result .left .name {
+  padding: 0px 0px 0px 5px;
+}
+
+.fuzzySearch .resultsList .result .right {
+  text-align: right;
+  flex-direction: column;
+}
+.fuzzySearch .resultsList .result .right .price {
+  position: relative;
+  bottom: 3px;
+  font-size: 1.08em;
+}
+
+.fuzzySearch .resultsList .result .title {
+  font-family: "title";
+  line-height: 16px;
+  color: #32274d;
+}
+
+.fuzzySearch .resultsList .result .thumbnail {
+  border-radius: 34px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.21);
+  background-repeat: no-repeat;
+  width: 34px;
+  height: 34px;
+  background-size: cover;
+  background-position: center;
+}
+
+.fuzzySearch .selectedProductIndicator {
+  position: absolute;
+  bottom: 5px;
+  left: 0px;
+  width: 100%;
+  background: white;
+  display: flex;
+  z-index: 1;
+  padding-left: 17px;
+  border-radius: 13px;
+}
+
+.fuzzySearch .selectedProductIndicator .brand {
+  color: rgba(0, 0, 0, 0.64);
+  padding: 0px 5px 0px 0px;
+}
+
+.fuzzySearch .selectedProductIndicator .title {
+  font-family: "title";
+  color: #32274d;
+}
+
+.fuzzySearch .resultsList .result .brand {
+  font-size: 0.55em;
+  color: rgba(0, 0, 0, 0.64);
+  padding: 3px 0px 0px 0px;
+}
+
+.fuzzySearch .resultsList .result .rating {
+  position: relative;
+  display: flex;
+  top: -12px;
+  flex-direction: row;
+  justify-content: flex-end;
+  visibility: hidden;
+  height: 10px;
+  color: transparent;
+}
+
+.fuzzySearch .resultsList .result .rating .star {
+}
+
+.fuzzySearch .resultsList .result .rating .star img {
+  width: 8px;
+}
