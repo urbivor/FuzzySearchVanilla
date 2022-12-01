@@ -1,5 +1,5 @@
 # FuzzySearchVanilla
-Fuzzy Search built with Vanilla JS Node
+Fuzzy Search built with Vanilla JS and Node
 
 Requirements:
 Node Package Manager
