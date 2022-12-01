@@ -57,9 +57,9 @@ h2 {
 .fuzzySearchStateLabel .decoration {
   position: absolute;
   width: 64px;
-  height: 5px;
+  height: 4px;
   background: #6366f1;
-  top: 30px;
+  top: 27px;
   border-radius: 5px;
 }
 
@@ -108,6 +108,45 @@ h2 {
   top: 3px;
 }
 
+.fuzzySearch .bigInput .overlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 16px;
+  top: 0px;
+  left: 0px;
+
+  height: 100%;
+  background: white;
+  border-radius: 21px;
+  visibility: hidden;
+  z-index: 1;
+}
+.fuzzySearch .bigInput .overlay .brand {
+  color: #808080;
+  padding: 0px 0px 0px 22px;
+  font-size: 0.64em;
+  white-space: nowrap;
+}
+.fuzzySearch .bigInput .overlay .title {
+  font-family: "bodyBold";
+  color: #32274d;
+  padding: 0px 0px 0px 5px;
+  white-space: nowrap;
+  font-size: 0.64em;
+}
+
+.fuzzySearch .bigInput .overlay .back {
+  padding: 13px;
+  position: absolute;
+  left: 0px;
+  top: -3px;
+  cursor: pointer;
+}
+.fuzzySearch .bigInput .overlay .back img {
+  width: 21px;
+}
+
 .fuzzySearch .clear {
   position: absolute;
   display: flex;
@@ -123,22 +162,6 @@ h2 {
   cursor: pointer;
   transform: scale(0.89);
   visibility: hidden;
-}
-
-.fuzzySearch .microloader {
-  position: absolute;
-  right: 15px;
-  bottom: 13px;
-  visibility: hidden;
-}
-
-.fuzzySearch .microloader div {
-  width: 16px;
-  height: 16px;
-  border-left: solid 1px #6366f0;
-  border-top: solid 1px #6366f0;
-  border-right: solid 1px #6366f0;
-  border-radius: 13px;
 }
 
 .fuzzySearch .resultsList {
@@ -171,7 +194,7 @@ h2 {
   width: 100%;
   cursor: pointer;
   border-radius: 13px;
-  background: white;
+  background: rgb(255, 255, 255);
   box-shadow: 0px 1px 13px rgb(0 0 0 / 21%);
   padding: 13px;
   margin: 8px 0px 0px 0px;
@@ -214,6 +237,7 @@ h2 {
   border-radius: 34px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.21);
   background-repeat: no-repeat;
+  position: relative;
   width: 34px;
   height: 34px;
   background-size: cover;
@@ -275,7 +299,7 @@ h2 {
   flex-direction: column;
   background: white;
   margin-left: 13px;
-  padding: 21px;
+  padding: 9px 16px 16px 13px;
   box-shadow: 0px 3px 13px rgb(0 0 0 / 13%);
   border-radius: 13px;
   transform: translate(34px, 0px);
@@ -293,5 +317,61 @@ h2 {
 }
 
 .fuzzySearch .productView .description {
-  font-size: 1em;
+  font-size: 0.89em;
+  font-family: "bodyRegular";
+  padding: 2px 13px 13px 0px;
+}
+
+.fuzzySearch .productView .primaryButton {
+  background-image: linear-gradient(155deg, #d4fc79 0%, #96e6a1 100%);
+  color: white;
+  width: fit-content;
+  border-radius: 13px;
+  padding: 8px 13px;
+  text-shadow: 0px 0px 5px rgb(36 105 32);
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.fuzzySearch .productView .primaryButton .price {
+  font-size: 1.34em;
+}
+
+.fuzzySearch .productView .productViewImages {
+  display: flex;
+  flex-wrap: wrap;
+}
+.fuzzySearch .productView .productViewImages .image:first-child {
+  margin: 8px 8px 8px 0px;
+}
+.fuzzySearch .productView .productViewImages .image {
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  background-size: cover;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.13);
+  margin: 8px;
+}
+
+.fuzzySearch .resultsList .result .microloader {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: 21px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fuzzySearch .resultsList .result .microloader div {
+  width: 10px;
+  height: 10px;
+  border-left: solid 1px #6366f0;
+  border-top: solid 1px #6366f0;
+  border-right: solid 1px #6366f0;
+  border-radius: 13px;
 }

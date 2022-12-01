@@ -6,6 +6,7 @@ let productResults = {}
 
 //States
 let noProductMatchesIndicatorState = `hidden`;
+let productSearchQueryState = `waiting`;
 
 //Actors
 let searchQueryInput = document.getElementById("searchQueryInput")
@@ -15,14 +16,23 @@ let productViewTitle = document.getElementById("productViewTitle")
 let productViewDescription = document.getElementById("productViewDescription")
 let productViewRating = document.getElementById("productViewRating")
 let productView = document.getElementById("productView")
+let productViewImages = document.getElementById("productViewImages")
+let productViewBuyButton = document.getElementById("productViewBuyButton")
+let productViewInputOverlay = document.getElementById("productViewInputOverlay")
+let productViewInputOverlayBackButton = document.getElementById("productViewInputOverlayBackButton")
+let productViewInputOverlayBrand = document.getElementById("productViewInputOverlayBrand")
+let productViewInputOverlayTitle = document.getElementById("productViewInputOverlayTitle")
 
 //Listeners
 searchQueryInput.addEventListener('input', (event) => {
     searchQueryWatcher()
 });
-searchQueryInput.addEventListener('keyup', (event) => {
-    searchQueryWatcher()
-});
+productViewInputOverlayBackButton.addEventListener('click', (event) => {
+    hideProductResult()
+})
+// searchQueryInput.addEventListener('keyup', (event) => {
+//     searchQueryWatcher()
+// });
 
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM loaded');
@@ -112,7 +122,7 @@ function resultsParser(results) {
     console.log(`Ready to parse ${results}...`)
     //The API returns a products subset which is all we need
     results = results.products
-
+    results.reverse();
     //Count the results
     let resultsCount = results.length;
     console.log(`Got ${resultsCount} results`)
@@ -176,7 +186,10 @@ function renderProductResults(results) {
         productSearchResultsList.insertAdjacentHTML('afterbegin', `
         <div onclick=viewProductResult(this.getAttribute('data-index'),this) data-index=${index} class="result">
             <div class="left">
-            <div id="thumbnail${resultID}" class="thumbnail";background-size:cover"></div>
+          
+            <div id="thumbnail${resultID}" class="thumbnail";background-size:cover">
+            <div class="microloader"></div>
+            </div>
             <div class="name">
              <div class="title">${result.title}</div>
              <div class="brand">${result.brand}</div>
@@ -194,11 +207,25 @@ function renderProductResults(results) {
         //When the image is loaded, apply it as a background image to the results thumbnail container. This is a recommendation to make use of CSS image scaling due to the API returning inconsistent image ratios
         thumbnailImage.onload = function () {
             console.log(`Ready with thumbnail as ${thumbnailImage}`)
+
             //Get the DOM element to apply the thumbail link to it using the results unique ID. The image has already been cached so calling it from the URL will be instant
             let thumbnailContainer = document.getElementById(`thumbnail${resultID}`)
-            //Apply the thumbnail
-            console.log(`Container ID ${thumbnailContainer.id}`)
-            thumbnailContainer.style.backgroundImage = `url(${thumbnailImageLink})`
+
+            //Wait for the ID to exist & apply the thumbnail
+
+            if (thumbnailContainer) {
+                //Apply the thumbnail
+                console.log(`Container ID ${thumbnailContainer.id}`)
+                thumbnailContainer.style.backgroundImage = `url(${thumbnailImageLink})`
+
+                //Get the results microloader to fade it out once the image loads
+                let microloader = thumbnailContainer.querySelector(`.microloader`)
+                gsap.to(microloader, {
+                    autoAlpha: 0,
+                    duration: 0.21,
+                    ease: Linear.easeNone
+                })
+            } else {}
         }
     })
 
@@ -243,7 +270,7 @@ function viewProductResult(index, thisResult) {
     console.log(`Got ${productResults[index].title}`)
     //Indicate which result has been selected
     gsap.to(thisResult, {
-        background: `#bcace3`,
+        background: `rgb(219 255 198)`,
         ease: Expo.easeOut,
         duration: 0.21,
     })
@@ -255,12 +282,37 @@ function viewProductResult(index, thisResult) {
         delay: 0.55
     })
 
+    //Render title & brand to the input overlay
+    productViewInputOverlayBrand.innerText = productResults[index].brand;
+    productViewInputOverlayTitle.innerText = productResults[index].title
+    //Show the input overlay. Accepts a delay for timing
+    showProductSearchInputOverlay(0.55)
 
     //Generate the product detail view
     productViewTitle.innerText = productResults[index].title
     productViewDescription.innerText = productResults[index].description
     productViewBrand.innerText = productResults[index].brand
+    productViewBuyButton.innerHTML = `
+    <div>Buy now</div>
+    <div class="price">$${productResults[index].price}</div>
+    `
     //Get any attached image links
+    let images = productResults[index].images;
+    let imagesLength = images.length;
+    console.log(`Found ${images.length} images for result`)
+
+    //If there images, run a loop through them to load & insert them into the product view
+    if (imagesLength > 0) {
+        images.forEach((image) => {
+            console.log(`Ready to load ${image}`)
+            productViewImages.insertAdjacentHTML('afterbegin', `
+            <div style="background-image:url(${image})" class="image">
+            </div>
+            `)
+        })
+    } else {
+        console.log(`No images for this product`)
+    }
 
     //Make it draggable
     Draggable.create(productView, {
@@ -274,10 +326,10 @@ function viewProductResult(index, thisResult) {
         },
         onDrag: function () {
             let deltaX = this.x;
-            deltaX > 8 ? hideProductResult(this) : ""
+            deltaX > 8 ? hideProductResult() & this.kill() : ""
 
         },
-        onDragEnd: function () {
+        onRelease: function () {
             gsap.to(productView, {
                 x: 0,
                 ease: Elastic.easeOut,
@@ -300,18 +352,18 @@ function viewProductResult(index, thisResult) {
 
 //BEGIN:Hide Product Result
 ////Hides the Product Result view. Pass it the Draggable instance
-function hideProductResult(drag) {
+function hideProductResult() {
     gsap.to(productView, {
-        x: 34,
+
         autoAlpha: 0,
         ease: Expo.easeOut,
         duration: 0.55,
         onComplete: function () {
             console.log(`Resetting product view`)
-            drag.kill()
             gsap.set(productView, {
                 x: 34
             })
+            productViewImages.innerHTML = ``
         }
     })
     gsap.to(productSearchResultsList, {
@@ -325,5 +377,34 @@ function hideProductResult(drag) {
         ease: Expo.easeOut,
         duration: 0.55
     })
+    gsap.to(productViewInputOverlay, {
+        autoAlpha: 0,
+        ease: Linear.easeNone,
+        duration: 0.13
+    })
 }
 //END:Hide Product Result
+
+//BEGIN:Show Product Search Input Overlay
+////Shows the product search input overlay when viewing a product/result. Pass it a delay in seconds
+function showProductSearchInputOverlay(delay) {
+    gsap.to(productViewInputOverlay, {
+        autoAlpha: 1,
+        ease: Linear.easeNone,
+        duration: 0.13,
+        delay:delay
+    })
+}
+//END:Show Product Search Input Overlay
+
+//BEGIN:Hide Product Search Input Overlay
+////Hides the product search input overlay when viewing a product/result.Pass it a delay in seconds
+function hideProductSearchInputOverlay(delay) {
+    gsap.to(productViewInputOverlay, {
+        autoAlpha: 0,
+        ease: Linear.easeNone,
+        duration: 0.13,
+        delay:delay
+    })
+}
+//END:Hide Product Search Input Overlay
