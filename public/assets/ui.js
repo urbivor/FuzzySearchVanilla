@@ -278,8 +278,8 @@ function viewProductResult(index, thisResult) {
     //Indicate which result has been selected
     gsap.to(thisResult, {
         background: `rgb(219 255 198)`,
-        ease: Expo.easeOut,
-        duration: 0.21,
+        ease: Linear.easeNone,
+        duration: 0.08,
     })
     //Slide out & hide the results
     gsap.to(productSearchResultsList, {
