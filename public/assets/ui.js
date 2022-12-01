@@ -111,8 +111,7 @@ function fetcher(api, query) {
             .then((data) => resultsParser(data))
             //Handles errors. Interesting note, the dummyjson.com API went down for a while & this caught it 💪
             .catch((error) => {
-                console.log('Failed to query products:', error);
-                console.error('Couldnt query products, show the error indicator')
+
                 hideSearchResults(0.08)
                 showProductSearchFailIndicator()
             });
@@ -149,7 +148,7 @@ function resultsParser(results) {
         }, 355);
         //Handle no matches
     } else {
-        console.log(`No matching products, show the no results indicator`)
+
         showNoProductMatchesIndicator()
         hideSearchResults(0.08)
 
@@ -363,7 +362,7 @@ function viewProductResult(index, thisResult) {
 
         })
     } else {
-        console.log(`No images for this product`)
+
     }
 
     //Make it draggable
@@ -410,7 +409,7 @@ function hideProductResult() {
         ease: Expo.easeOut,
         duration: 0.55,
         onComplete: function () {
-            
+
             gsap.set(productView, {
                 x: 34
             })
