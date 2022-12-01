@@ -304,11 +304,24 @@ function viewProductResult(index, thisResult) {
     //If there images, run a loop through them to load & insert them into the product view
     if (imagesLength > 0) {
         images.forEach((image) => {
+
             console.log(`Ready to load ${image}`)
-            productViewImages.insertAdjacentHTML('afterbegin', `
-            <div style="background-image:url(${image})" class="image">
-            </div>
-            `)
+
+            //Download the images before fading them in
+
+            let productImage = new Image(0, 0)
+            productImage.src = image
+            productImage.onload = function () {
+                productViewImages.insertAdjacentHTML('afterbegin', `
+                <div style="background-image:url(${image})" class="image">
+                </div>
+                `)
+                setTimeout(() => {
+                    
+                }, 155);
+            }
+
+
         })
     } else {
         console.log(`No images for this product`)
@@ -392,7 +405,7 @@ function showProductSearchInputOverlay(delay) {
         autoAlpha: 1,
         ease: Linear.easeNone,
         duration: 0.13,
-        delay:delay
+        delay: delay
     })
 }
 //END:Show Product Search Input Overlay
@@ -404,7 +417,7 @@ function hideProductSearchInputOverlay(delay) {
         autoAlpha: 0,
         ease: Linear.easeNone,
         duration: 0.13,
-        delay:delay
+        delay: delay
     })
 }
 //END:Hide Product Search Input Overlay
