@@ -302,7 +302,7 @@ h2 {
   margin-left: 13px;
   padding: 9px 16px 16px 13px;
   box-shadow: 0px 3px 13px rgb(0 0 0 / 13%);
-  border-radius: 13px;
+  border-radius: 13px 13px 34px 13px;
   transform: translate(34px, 0px);
   z-index: 3;
   visibility: hidden;
@@ -326,18 +326,19 @@ h2 {
 .fuzzySearch .productView .primaryButton {
   background-image: linear-gradient(155deg, #d4fc79 0%, #96e6a1 100%);
   color: white;
-  width: fit-content;
-  border-radius: 13px;
+  border-radius: 13px 13px 21px 13px;
   padding: 8px 13px;
   text-shadow: 0px 0px 5px rgb(36 105 32);
   cursor: pointer;
   width: 100%;
   text-align: center;
   box-sizing: border-box;
+  font-size: 0.89em;
+  box-shadow: 0px 5px 21px rgb(80 175 87 / 89%);
 }
 
 .fuzzySearch .productView .primaryButton .price {
-  font-size: 1.34em;
+  font-size: 1.64em;
 }
 
 .fuzzySearch .productView .productViewImages {
@@ -354,6 +355,7 @@ h2 {
   background-size: cover;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.13);
   margin: 8px;
+  opacity: 0;
 }
 
 .fuzzySearch .resultsList .result .microloader {

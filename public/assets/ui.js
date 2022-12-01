@@ -268,6 +268,13 @@ function renderStar(container, stars) {
 function viewProductResult(index, thisResult) {
     console.log(`Ready to get ${index} from productResults...`)
     console.log(`Got ${productResults[index].title}`)
+    //Scroll the window to the top in case a user selects an item from the bottom of a long list
+    gsap.to(window, {
+        scrollTo: 0,
+        duration: 1.55,
+        ease: Expo.easeOut
+    })
+
     //Indicate which result has been selected
     gsap.to(thisResult, {
         background: `rgb(219 255 198)`,
@@ -304,21 +311,27 @@ function viewProductResult(index, thisResult) {
     //If there images, run a loop through them to load & insert them into the product view
     if (imagesLength > 0) {
         images.forEach((image) => {
-
+            //Generating a throwaway ID for the product for DOM targeting
+            let productID = Math.random().toString(36).slice(2, 7);
             console.log(`Ready to load ${image}`)
+
+            productViewImages.insertAdjacentHTML('afterbegin', `
+            <div id="${productID}"  class="image">
+            </div>
+            `)
 
             //Download the images before fading them in
 
             let productImage = new Image(0, 0)
             productImage.src = image
             productImage.onload = function () {
-                productViewImages.insertAdjacentHTML('afterbegin', `
-                <div style="background-image:url(${image})" class="image">
-                </div>
-                `)
-                setTimeout(() => {
-                    
-                }, 155);
+                let productImage = document.getElementById(`${productID}`)
+                productImage.style.backgroundImage = `url(${image})`
+                gsap.to(productImage, {
+                    duration: 0.21,
+                    autoAlpha: 1,
+                    ease: Linear.easeNone
+                })
             }
 
 
