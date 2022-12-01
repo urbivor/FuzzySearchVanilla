@@ -7,10 +7,12 @@ let productResults = {}
 //States
 let noProductMatchesIndicatorState = `hidden`;
 let productSearchQueryState = `waiting`;
+let productSearchFailIndicatorState = `hidden`;
 
 //Actors
 let searchQueryInput = document.getElementById("searchQueryInput")
 let productSearchNoResultsIndicator = document.getElementById("productSearchNoResultsIndicator")
+let productSearchFailIndicator = document.getElementById("productSearchFailIndicator")
 let productSearchResultsList = document.getElementById("productSearchResultsList")
 let productViewTitle = document.getElementById("productViewTitle")
 let productViewDescription = document.getElementById("productViewDescription")
@@ -73,7 +75,7 @@ function hideSearchResults(duration) {
 //BEGIN:Search Query Watcher
 ////Watches the Search Query input for changes.
 function searchQueryWatcher() {
-    console.log(`Search Query Watcher detected a change`)
+
     //Hide any visible ratings to re-enable fade-in
     gsap.to('.rating', {
         duration: 0.05,
@@ -82,13 +84,10 @@ function searchQueryWatcher() {
     hideSearchResults(0.08)
 
     let searchQuery = searchQueryInput.value;
-    console.log(`New search query is ${searchQuery}`)
     let queryCharacterCount = searchQuery.length;
     if (queryCharacterCount > 0) {
         fetcher(`productSearch`, searchQuery)
     } else {
-
-        console.log(`Not enough characters to query products`)
         hideSearchResults(0.05)
         hideNoProductMatchesIndicator();
     }
@@ -100,10 +99,10 @@ function searchQueryWatcher() {
 //BEGIN:Fetcher
 ////Interfaces with an API. Pass it the API name as the first parameter & additional parmaters thereafter
 function fetcher(api, query) {
-    console.log(`Got a request to call ${api} api`)
+
     //I'll just write one endpoint for this app, Product Search
     if (api == `productSearch`) {
-        console.log(`Ready to get data from products search API with query ${query}`)
+
         //Using Fetch we can do a very simple request like this & also built much more complex payloads with different content types
         fetch(`https://dummyjson.com/products/search?q=${query}`)
             //Assuming all goes well, convert the response to a JSON object
@@ -115,6 +114,7 @@ function fetcher(api, query) {
                 console.log('Failed to query products:', error);
                 console.error('Couldnt query products, show the error indicator')
                 hideSearchResults(0.08)
+                showProductSearchFailIndicator()
             });
     }
 }
@@ -123,9 +123,15 @@ function fetcher(api, query) {
 //BEGIN:Results Parser
 ////Parses results after a search. Pass it a JSON object
 function resultsParser(results) {
-    console.log(`Ready to parse ${results}...`)
+    //Hide the Product Search Fail Indicator if its visible
+
+    productSearchFailIndicatorState == `visible` ? gsap.to(productSearchFailIndicator, {
+        autoAlpha: 0
+    }) : ""
+
     //The API returns a products subset which is all we need
     results = results.products
+    //Reversing it as result appear more relevant
     results.reverse();
     //Count the results
     let resultsCount = results.length;
@@ -169,12 +175,31 @@ function hideNoProductMatchesIndicator() {
 }
 //END: Hides the No Product Matches Indicator
 
+//BEGIN:Show The Product Search Fail Indicator
+////Shows the no product search fail indicator
+function showProductSearchFailIndicator() {
+    gsap.to(productSearchFailIndicator, {
+        autoAlpha: 1,
+    })
+    productSearchFailIndicatorState = `visible`
+}
+//END: Show Product Search Fail Indicator
+
+//BEGIN:Hide Product Search Fail Indicator
+////Hides the Product Search Fail Indicator
+function hideProductSearchFailIndicator() {
+    gsap.to(productSearchFailIndicator, {
+        autoAlpha: 0,
+    })
+    productSearchFailIndicatorState = `hidden`
+}
+//END: Hides the Product Search Fail Indicator
+
 //BEGIN:  Render Product Results
 ////Renders a list of product results
 function renderProductResults(results) {
 
     productSearchResultsList.innerHTML = ``;
-    console.log(`Got ${results.length} products to render`)
     results.forEach((result, index) => {
         //Creating a random throwaway 5 character ID to append to this result (Required to draw ratings stars & apply fade in to thumbnails)
         let resultID = Math.random().toString(36).slice(2, 7);
@@ -268,9 +293,6 @@ function renderStar(container, stars) {
 //BEGIN:View Product Result
 ////Views a matching product result.Pass it the index of the result you'd like as it exists in the global productResults object & the DOM result itself
 function viewProductResult(index, thisResult) {
-    console.log(`Ready to get ${index} from productResults...`)
-    console.log(`Got ${productResults[index].title}`)
-
     //Scroll the window to the top in case a user selects an item from the bottom of a long list
     gsap.to(window, {
         scrollTo: 0,
@@ -280,7 +302,7 @@ function viewProductResult(index, thisResult) {
 
     //Indicate which result has been selected
     gsap.to(thisResult, {
-        background: `rgb(219 255 198)`,
+        background: `rgb(176, 178, 255)`,
         ease: Linear.easeNone,
         duration: 0.08,
     })
@@ -313,15 +335,12 @@ function viewProductResult(index, thisResult) {
     //Get any attached image links
     let images = productResults[index].images;
     let imagesLength = images.length;
-    console.log(`Found ${images.length} images for result`)
 
     //If there images, run a loop through them to load & insert them into the product view
     if (imagesLength > 0) {
         images.forEach((image) => {
             //Generating a throwaway ID for the product for DOM targeting
             let productID = Math.random().toString(36).slice(2, 7);
-            console.log(`Ready to load ${image}`)
-
             productViewImages.insertAdjacentHTML('afterbegin', `
             <div id="${productID}"  class="image">
             </div>
@@ -355,7 +374,6 @@ function viewProductResult(index, thisResult) {
         onDragStart: function () {
             let startPosition = this.x;
             let direction = this.getDirection()
-            console.log(`${direction},x:${startPosition}`)
         },
         onDrag: function () {
             let deltaX = this.x;
@@ -392,7 +410,7 @@ function hideProductResult() {
         ease: Expo.easeOut,
         duration: 0.55,
         onComplete: function () {
-            console.log(`Resetting product view`)
+            
             gsap.set(productView, {
                 x: 34
             })
@@ -413,7 +431,7 @@ function hideProductResult() {
     })
     //Reset tap highlights
     gsap.to('.result', {
-        background: `#ffffff`,
+        background: `rgba(255,255,255)`,
         ease: Expo.easeOut,
         duration: 0.55
     })
