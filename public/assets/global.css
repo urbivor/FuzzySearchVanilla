@@ -18,7 +18,10 @@ input {
   outline: none;
   border: none;
 }
-
+input::selection {
+  background: #6366f1;
+  color: white;
+}
 input:focus {
   outline: none;
   border: none;

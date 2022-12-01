@@ -27,6 +27,8 @@ let productViewInputOverlayTitle = document.getElementById("productViewInputOver
 searchQueryInput.addEventListener('input', (event) => {
     searchQueryWatcher()
 });
+
+
 productViewInputOverlayBackButton.addEventListener('click', (event) => {
     hideProductResult()
 })
@@ -47,7 +49,7 @@ window.addEventListener('load', (event) => {
 //BEGIN:Show Search Results
 ////Shows the matching search results. Pass it a duration in seconds
 function showSearchResults(duration) {
-    console.log(`Showing search results over ${duration} seconds...`);
+
     gsap.to(productSearchResultsList, {
         autoAlpha: 1,
         ease: Linear.easeNone,
@@ -59,7 +61,7 @@ function showSearchResults(duration) {
 //BEGIN:Hide Search Results
 ////Hides the search results. Pass it a duration in seconds
 function hideSearchResults(duration) {
-    console.log(`Hiding search results over ${duration} seconds...`);
+
     gsap.to(productSearchResultsList, {
         autoAlpha: 0,
         ease: Linear.easeNone,
@@ -85,13 +87,15 @@ function searchQueryWatcher() {
     if (queryCharacterCount > 0) {
         fetcher(`productSearch`, searchQuery)
     } else {
+
         console.log(`Not enough characters to query products`)
         hideSearchResults(0.05)
-        hideNoProductMatchesIndicator()
+        hideNoProductMatchesIndicator();
     }
 
 }
 //END:Search Query Watcher
+
 
 //BEGIN:Fetcher
 ////Interfaces with an API. Pass it the API name as the first parameter & additional parmaters thereafter
@@ -125,13 +129,13 @@ function resultsParser(results) {
     results.reverse();
     //Count the results
     let resultsCount = results.length;
-    console.log(`Got ${resultsCount} results`)
+
     //More than 0 results?
     if (resultsCount > 0) {
-        console.log(`Found matching products, show the resultsList`)
+
         //Set the results to the globally available data object productResults{}
         productResults = results;
-        console.log(`Products globally available as ${productResults}`)
+
         hideNoProductMatchesIndicator()
         renderProductResults(results);
         setTimeout(() => {
@@ -176,7 +180,7 @@ function renderProductResults(results) {
         let resultID = Math.random().toString(36).slice(2, 7);
         //Getting the thumbnail image link for the result. The dummyjson.com/products API always sends the thumbnail as the last image
         let thumbnailImageLink = result.images.pop();
-        console.log(`Got a thumbnail link as ${thumbnailImageLink}`)
+
         //Creating the image as a javascript object, this is required to gracefully hide the loading indicator & allows to handle image load failures
         let thumbnailImage = new Image(0, 0);
         thumbnailImage.src = thumbnailImageLink;
@@ -206,7 +210,6 @@ function renderProductResults(results) {
         `)
         //When the image is loaded, apply it as a background image to the results thumbnail container. This is a recommendation to make use of CSS image scaling due to the API returning inconsistent image ratios
         thumbnailImage.onload = function () {
-            console.log(`Ready with thumbnail as ${thumbnailImage}`)
 
             //Get the DOM element to apply the thumbail link to it using the results unique ID. The image has already been cached so calling it from the URL will be instant
             let thumbnailContainer = document.getElementById(`thumbnail${resultID}`)
@@ -215,7 +218,7 @@ function renderProductResults(results) {
 
             if (thumbnailContainer) {
                 //Apply the thumbnail
-                console.log(`Container ID ${thumbnailContainer.id}`)
+
                 thumbnailContainer.style.backgroundImage = `url(${thumbnailImageLink})`
 
                 //Get the results microloader to fade it out once the image loads
@@ -237,14 +240,13 @@ function renderProductResults(results) {
 //BEGIN:Render Star
 ////Renders a star x amount of times 
 function renderStar(container, stars) {
-    console.log(`Ready to render ${stars} stars into ${container}`)
+
     setTimeout(() => {
 
         let thisContainer = document.getElementById(container)
         if (thisContainer) {
             thisContainer.innerHTML = ``
             for (var i = 0; i < stars; i++) {
-                console.log(`Here's one`);
                 thisContainer.insertAdjacentHTML('afterbegin', `<div class="star">
             <img src="assets/images/ratingStar.svg"/>
             </div>`)
@@ -268,6 +270,7 @@ function renderStar(container, stars) {
 function viewProductResult(index, thisResult) {
     console.log(`Ready to get ${index} from productResults...`)
     console.log(`Got ${productResults[index].title}`)
+
     //Scroll the window to the top in case a user selects an item from the bottom of a long list
     gsap.to(window, {
         scrollTo: 0,
@@ -287,6 +290,10 @@ function viewProductResult(index, thisResult) {
         autoAlpha: 0.13,
         ease: Expo.easeOut,
         delay: 0.55
+    })
+    //Disable interactions on the results
+    gsap.set(productSearchResultsList, {
+        pointerEvents: `none`
     })
 
     //Render title & brand to the input overlay
@@ -379,8 +386,8 @@ function viewProductResult(index, thisResult) {
 //BEGIN:Hide Product Result
 ////Hides the Product Result view. Pass it the Draggable instance
 function hideProductResult() {
+    //Hide the product result view
     gsap.to(productView, {
-
         autoAlpha: 0,
         ease: Expo.easeOut,
         duration: 0.55,
@@ -392,17 +399,25 @@ function hideProductResult() {
             productViewImages.innerHTML = ``
         }
     })
+    //Bring the results back
     gsap.to(productSearchResultsList, {
         x: 0,
         autoAlpha: 1,
         ease: Expo.easeOut,
 
     })
+
+    //Re-enable interactions on the results
+    gsap.set(productSearchResultsList, {
+        pointerEvents: `all`
+    })
+    //Reset tap highlights
     gsap.to('.result', {
         background: `#ffffff`,
         ease: Expo.easeOut,
         duration: 0.55
     })
+    //Hide the input overlay
     gsap.to(productViewInputOverlay, {
         autoAlpha: 0,
         ease: Linear.easeNone,
